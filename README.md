@@ -1,14 +1,41 @@
-# VeriFact
+<div align="center">
 
-**Runtime behavioral verification for AI-generated code.**
+# 🔍 VeriFact
 
-VeriFact verifies that code does what the human *meant* — by **executing it**, not by reading the diff. Diff-readers (CodeRabbit, Qodo) rubber-stamp hallucinated business logic; VeriFact extracts machine-checkable rules from the intent (PR description, ticket, later: agent chat) and runs them against the real app in a sandbox.
+**Your AI writes the code. VeriFact proves it does what you meant.**
 
-## Why
+Runtime behavioral verification for AI-generated code — VeriFact turns your stated
+intent into executable tests, runs them against the real app in a sandbox, and
+posts the verdict on your pull request. LLMs *propose*; VeriFact *executes*.
+
+[![CI](https://img.shields.io/badge/CI-workflow-blue)](.github/workflows/ci.yml)
+[![Benchmark](https://img.shields.io/badge/benchmark-100%25%20detection%20%2F%200%25%20FP-brightgreen)](BENCHMARK_REPORT.md)
+[![Tests](https://img.shields.io/badge/tests-37%2F37-brightgreen)]()
+[![Node](https://img.shields.io/badge/node-%E2%89%A520-green)]()
+[![License: MIT](https://img.shields.io/badge/license-MIT-lightgrey)]()
+
+*Diff readers review the code. VeriFact verifies the behavior.*
+
+</div>
+
+---
+
+## Why it exists
 
 - 96% of developers don't fully trust AI-generated code; only 48% verify before commit (Sonar, 2026)
 - AI code has 1.7× more errors; review time up 93% (LinearB)
 - The failure mode nobody owns: **hallucinated logic** — compiles, diff looks clean, tests stay green, the discount math is wrong
+
+CodeRabbit and Qodo **read** your diff. VeriFact **executes** your intent against the real app in a sandbox — the only way to catch logic that is syntactically perfect and wrong.
+
+## Features
+
+- 🧠 **Intent extraction** — deterministic rule parser + LLM adapters (OpenAI / Anthropic / custom). LLM failure never reduces coverage
+- 🧪 **Executable verification** — rules become black-box probes against the live app; failure injection (db down, timeouts, upstream 5xx) at the wire
+- 📚 **Rule ledger** — verified intent persists per repo and re-verifies every future PR: yesterday's spec is tomorrow's regression net
+- 💬 **GitHub App** — verdict table on every PR, with a repro on every violation
+- 📊 **Dashboard** — verification debt per repo: rules, runs, staleness
+- 🤖 **MCP server** — `verify_change` from inside Cursor / Claude Code
 
 ## Architecture
 
@@ -135,10 +162,14 @@ Implications, now baked into the plan:
 - Detection-rate reporting per repo ("verification debt" metric)
 - Benchmark growth: 1,000 cases across stacks, published as a public report
 
-## Pricing (planned)
+## License
 
-Free (public repos, 50 runs/mo) · Team $49/dev/mo · Enterprise self-host $30–60k/yr
+MIT — see [LICENSE](LICENSE).
 
 ## Status
 
-MVP + ledger + hosted-service ready: extractor (+LLM adapters), generator, runner, injection proxy, PR reporter, dashboard, webhook, MCP server, CLI (`run`/`dogfood`/`ledger`), rule ledger with regression-net flywheel, Dockerfile + Fly/Render configs — 35/35 tests, benchmark gate passed at 100% / 0%.
+MVP + ledger + hosted-service ready: extractor (+LLM adapters), generator, runner, injection proxy, PR reporter, dashboard, webhook, MCP server, CLI (`run`/`dogfood`/`ledger`), rule ledger with regression-net flywheel, Dockerfile + Fly/Render configs — **37/37 tests**, benchmark gate passed at **100% detection / 0% false positives**.
+
+## Pricing (planned)
+
+Free (public repos, 50 runs/mo) · Team $49/dev/mo · Enterprise self-host $30–60k/yr
