@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      - run: npm test
+      - run: npm run benchmark
+
+  benchmark-gate:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+      - run: npm run build
+      # Hard gate: detection >= 70%, false positives <= 10%
+      - run: |
+          npm run benchmark 2>&1 | tee bench.log
+          DET=$(grep -oP 'Detection rate \(bugs caught\):\s+\K[0-9.]+' bench.log)
+          FP=$(grep -oP 'False-positive rate \(clean flagged\):\s+\K[0-9.]+' bench.log)
+          echo "detection=$DET fp=$FP"
+          awk "BEGIN { exit !($DET >= 70 && $FP <= 10) }" \
+            || { echo "::error::Benchmark gate failed"; exit 1; }

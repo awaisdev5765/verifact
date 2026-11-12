@@ -1,0 +1,25 @@
+# Render.com deployment (alternative to Fly) — see DEPLOY.md
+services:
+  - type: web
+    name: verifact
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    plan: standard
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: VERIFACT_WEBHOOK_SECRET
+        sync: false
+      - key: GITHUB_TOKEN
+        sync: false
+      - key: VERIFACT_LLM_API_KEY
+        sync: false
+      - key: VERIFACT_LLM_PROVIDER
+        value: openai
+      - key: VERIFACT_TARGET
+        value: /repos/target
+    disk:
+      name: ledger
+      mountPath: /data
+      sizeGB: 1

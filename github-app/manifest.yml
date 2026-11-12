@@ -1,0 +1,22 @@
+# VeriFact GitHub App manifest — use at https://github.com/settings/apps/new
+# (paste the contents into the "GitHub App manifest" flow, or fill the form manually)
+name: VeriFact
+url: https://verifact.dev
+hook_attributes:
+  url: https://YOUR-PUBLIC-HOST/webhook   # dev: use an smee.io channel URL
+  active: true
+redirect_url: https://verifact.dev/installed
+callback_urls: []
+setup_url: https://verifact.dev/setup
+description: >-
+  Runtime behavioral verification for AI-generated code. VeriFact checks that
+  pull requests do what the author intended by executing the change in a
+  sandbox and posting per-intent-rule verdicts with repros.
+public: false
+default_permissions:
+  pull_requests: write
+  contents: read
+  metadata: read
+default_events:
+  - pull_request
+restrict_to_single_account: false

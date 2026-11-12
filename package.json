@@ -1,0 +1,20 @@
+{
+  "name": "verifact",
+  "version": "0.1.0",
+  "type": "module",
+  "license": "MIT",
+  "description": "Runtime behavioral verification for AI-generated code. Verifies code does what the human meant, by executing it.",
+  "bin": { "verifact": "dist/cli/index.js" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "node --test dist/tests/*.test.js",
+    "benchmark": "node dist/benchmark/harness.js",
+    "server": "node dist/src/gh/webhook.js",
+    "mcp": "node dist/src/mcp/server.js"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5",
+    "@types/node": "^20"
+  }
+}
